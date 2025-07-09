@@ -22,6 +22,8 @@ services:
       - EXECUTIONS_DATA_PRUNE=true
       # Set the maximum age of execution data to 30 days (720 hours)
       - EXECUTIONS_DATA_MAX_AGE=720
+      # Temporary workaround!!!!!!!!!!!!!!!!!!
+      - N8N_SECURE_COOKIE=false
       # The external URL for webhook callbacks.
       - WEBHOOK_URL=${N8N_WEBHOOK_URL:-http://localhost:5678}
       # Disable n8n sending data to n8n servers
