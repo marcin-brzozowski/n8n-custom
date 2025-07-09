@@ -41,8 +41,8 @@ services:
     
       # Custom & community nodes settings
       # See https://docs.n8n.io/hosting/configuration/environment-variables/nodes/
-      - NODE_FUNCTION_ALLOW_EXTERNAL="*" # Allows any external node to be imported in n8n code nodes
-      - NODE_FUNCTION_ALLOW_BUILTIN="*" # Allow built-in nodes to be imported in n8n code nodes
+      - NODE_FUNCTION_ALLOW_EXTERNAL=* # Allows any external node to be imported in n8n code nodes
+      - NODE_FUNCTION_ALLOW_BUILTIN=* # Allow built-in nodes to be imported in n8n code nodes
       - N8N_COMMUNITY_PACKAGES_ENABLED=true # Allow community packages to be installed
       - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true # Allow community packages to be used as nodes for AI Agents
       # N8N_CUSTOM_EXTENSIONS # Path to a custom n8n extension
