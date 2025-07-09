@@ -25,6 +25,45 @@ services:
       # The external URL for webhook callbacks.
       # Replace <YOUR_RASPBERRY_PI_IP> with your Pi's actual IP address.
       - WEBHOOK_URL=${N8N_WEBHOOK_URL}
+      # Disable n8n sending data to n8n servers
+      
+      # See https://docs.n8n.io/hosting/configuration/configuration-examples/isolation/
+      - N8N_DIAGNOSTICS_ENABLED= false
+      - N8N_SENTRY_DSN= # Unset to disable sentry
+      - N8N_DIAGNOSTICS_CONFIG_FRONTEND= # Unset
+      - N8N_DIAGNOSTICS_CONFIG_BACKEND= # Unset
+      - EXTERNAL_FRONTEND_HOOKS_URLS= # Unset
+    
+      # UI notification settings
+      # See https://docs.n8n.io/hosting/configuration/environment-variables/deployment/
+      - N8N_VERSION_NOTIFICATIONS_ENABLED=true # Show n8n version notifications in UI
+      - N8N_PERSONALIZATION_ENABLED=false # Skip personalization during account creation
+      - N8N_TEMPLATES_ENABLED=true # Enable templates in UI
+    
+      # Custom & community nodes settings
+      # See https://docs.n8n.io/hosting/configuration/environment-variables/nodes/
+      - NODE_FUNCTION_ALLOW_EXTERNAL="*" # Allows any external node to be imported in n8n code nodes
+      - NODE_FUNCTION_ALLOW_BUILTIN="*" # Allow built-in nodes to be imported in n8n code nodes
+      - N8N_COMMUNITY_PACKAGES_ENABLED=true # Allow community packages to be installed
+      - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true # Allow community packages to be used as nodes for AI Agents
+      # N8N_CUSTOM_EXTENSIONS # Path to a custom n8n extension
+    
+      # Logging settings
+      # See https://docs.n8n.io/hosting/configuration/environment-variables/logs/#n8n-logs
+      - N8N_LOG_LEVEL=${N8N_LOG_LEVEL:-info}
+      - DB_LOGGING_ENABLED=false
+      - DB_LOGGING_OPTIONS=query # Set to `all` to see all TypeORM logs messages, DB_LOGGING_ENABLED must be true
+      - CODE_ENABLE_STDOUT=true # Show code nodes logging in stdout
+    
+      # Fix config file permissions warnings
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+    
+      # Task runner settings
+      # See https://docs.n8n.io/hosting/configuration/task-runners/#setting-up-external-mode
+      - N8N_RUNNERS_ENABLED=true
+      # N8N_RUNNERS_MODE: external
+      # N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN} # Required for external mode
+
     networks:
       - n8n-network
     volumes:
