@@ -1,0 +1,56 @@
+services:
+  # The n8n service using our custom image
+  n8n:
+    # Build the Docker image from the Dockerfile in the current directory (.)
+    build:
+      context: .
+    ports:
+      # Expose n8n's port 5678 to the host machine
+      - "5678:5678"
+    restart: always
+    environment:
+      # Database connection details, pointing to the 'postgres' service
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+      # Set the timezone for n8n
+      - GENERIC_TIMEZONE=Europe/Warsaw
+      # Enable automatic pruning of old execution data to save space
+      - EXECUTIONS_DATA_PRUNE=true
+      # Set the maximum age of execution data to 30 days (720 hours)
+      - EXECUTIONS_DATA_MAX_AGE=720
+      # The external URL for webhook callbacks.
+      # Replace <YOUR_RASPBERRY_PI_IP> with your Pi's actual IP address.
+      - WEBHOOK_URL=${N8N_WEBHOOK_URL}
+    volumes:
+      # Mount a named volume for n8n's own data (workflows, credentials, etc.)
+      - n8n_data:/home/node/.n8n
+      # Mount a named volume for pipx data. This is crucial for persisting Python packages.
+      - pipx_data:/home/node/.pipx
+    depends_on:
+      # Ensure the postgres service is running before n8n starts
+      - postgres
+
+  # The PostgreSQL database service
+  postgres:
+    # Use a resource-friendly Alpine version of PostgreSQL
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      # Set credentials for the database. These must match the variables used in the n8n service.
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      # Mount a named volume to persist the database data
+      - postgres_data:/var/lib/postgresql/data
+    # Do not expose the database port to the host for security
+
+# Top-level definition of the named volumes for data persistence
+volumes:
+  n8n_data:
+  postgres_data:
+  pipx_data:
