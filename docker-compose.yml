@@ -13,9 +13,9 @@ services:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
-      - DB_POSTGRESDB_USER=${POSTGRES_USER}
-      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB:-n8n}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER:-n8n}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD:-P@ssw0rd}
       # Set the timezone for n8n
       - GENERIC_TIMEZONE=Europe/Warsaw
       # Enable automatic pruning of old execution data to save space
@@ -23,8 +23,7 @@ services:
       # Set the maximum age of execution data to 30 days (720 hours)
       - EXECUTIONS_DATA_MAX_AGE=720
       # The external URL for webhook callbacks.
-      # Replace <YOUR_RASPBERRY_PI_IP> with your Pi's actual IP address.
-      - WEBHOOK_URL=${N8N_WEBHOOK_URL}
+      - WEBHOOK_URL=${N8N_WEBHOOK_URL:-http://localhost:5678}
       # Disable n8n sending data to n8n servers
       
       # See https://docs.n8n.io/hosting/configuration/configuration-examples/isolation/
@@ -82,9 +81,9 @@ services:
     restart: always
     environment:
       # Set credentials for the database. These must match the variables used in the n8n service.
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER:-n8n}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-P@ssw0rd}
+      - POSTGRES_DB=${POSTGRES_DB:-n8n}
     networks:
       - n8n-network
     volumes:
