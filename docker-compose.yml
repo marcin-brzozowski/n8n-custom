@@ -27,7 +27,7 @@ services:
       # Disable n8n sending data to n8n servers
       
       # See https://docs.n8n.io/hosting/configuration/configuration-examples/isolation/
-      - N8N_DIAGNOSTICS_ENABLED= false
+      - N8N_DIAGNOSTICS_ENABLED=false
       - N8N_SENTRY_DSN= # Unset to disable sentry
       - N8N_DIAGNOSTICS_CONFIG_FRONTEND= # Unset
       - N8N_DIAGNOSTICS_CONFIG_BACKEND= # Unset
