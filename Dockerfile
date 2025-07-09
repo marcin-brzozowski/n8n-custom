@@ -16,7 +16,7 @@ USER node
 
 # Install pipx using pip
 # We use --no-cache-dir to minimize layer size
-RUN pip install --no-cache-dir pipx
+RUN pip install --no-cache-dir --user --break-system-packages pipx
 
 # Set environment variables for pipx
 # PIPX_HOME is where pipx stores its virtual environments and other data.
