@@ -7,10 +7,9 @@ FROM n8nio/n8n
 USER root
 
 # Update package lists and install python3 and python3-pip
-# --no-install-recommends reduces the image size
-RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-pip && \
-    # Clean up the apt cache to keep the image lean
-    rm -rf /var/lib/apt/lists/*
+RUN apk update && apk add --no-cache python3 py3-pip && \
+    # Clean up the apk cache
+    rm -rf /var/cache/apk/*
 
 # Switch back to the non-root 'node' user for security
 USER node
