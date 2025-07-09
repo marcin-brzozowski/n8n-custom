@@ -25,6 +25,8 @@ services:
       # The external URL for webhook callbacks.
       # Replace <YOUR_RASPBERRY_PI_IP> with your Pi's actual IP address.
       - WEBHOOK_URL=${N8N_WEBHOOK_URL}
+    networks:
+      - n8n-network
     volumes:
       # Mount a named volume for n8n's own data (workflows, credentials, etc.)
       - n8n_data:/home/node/.n8n
@@ -44,12 +46,17 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - n8n-network
     volumes:
       # Mount a named volume to persist the database data
       - postgres_data:/var/lib/postgresql/data
-    # Do not expose the database port to the host for security
 
-# Top-level definition of the named volumes for data persistence
+networks:
+  n8n-network:
+    name: n8n-network
+    driver: bridge 
+
 volumes:
   n8n_data:
   postgres_data:
