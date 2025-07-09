@@ -93,7 +93,6 @@ services:
 networks:
   n8n-network:
     name: n8n-network
-    external: true
     driver: bridge 
 
 volumes:
