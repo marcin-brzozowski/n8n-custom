@@ -11,6 +11,7 @@ services:
     container_name: n8n
     environment:
       # Database connection details, pointing to the 'postgres' service
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
@@ -70,6 +71,7 @@ services:
       - n8n-network
       - n8n-network-internal
     volumes:
+      - ./scripts:/usr/src/app/scripts
       # Mount a named volume for n8n's own data (workflows, credentials, etc.)
       - n8n_data:/home/node/.n8n
       # Mount a named volume for pipx data. This is crucial for persisting Python packages.
