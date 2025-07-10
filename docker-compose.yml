@@ -67,6 +67,7 @@ services:
 
     networks:
       - n8n-network
+      - n8n-network-internal
     volumes:
       # Mount a named volume for n8n's own data (workflows, credentials, etc.)
       - n8n_data:/home/node/.n8n
@@ -87,12 +88,13 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-P@ssw0rd}
       - POSTGRES_DB=${POSTGRES_DB:-n8n}
     networks:
-      - n8n-network
+      - n8n-network-internal
     volumes:
       # Mount a named volume to persist the database data
       - postgres_data:/var/lib/postgresql/data
 
 networks:
+  n8n-network-internal:
   n8n-network:
     name: n8n-network
     driver: bridge 
