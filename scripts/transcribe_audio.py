@@ -44,6 +44,7 @@ Your primary goal is to transcribe the provided audio into a clean, accurate, an
 
 ## 2. Output Format: Clean Transcript
 This is a **clean** transcript. Adhere strictly to the following rules:
+- **Character Encoding**: The final output MUST be a valid UTF-8 encoded string. You are strictly forbidden from using Unicode escape sequences (e.g., \u015b, \u0142). All special characters must be rendered directly in the text (e.g., ś, ł).
 - **Remove Filler Words:** Do not transcribe any filler words.
     - **English fillers to remove:** um, uh, ah, er, like, you know, I mean.
     - **Polish fillers to remove:** yyy, eee, hmm, ten, no, wiesz, po prostu, jakby.
@@ -58,7 +59,7 @@ This is a **clean** transcript. Adhere strictly to the following rules:
 ## 4. Language-Specific Rules
 
 ### For Polish (`pl-PL`)
-- **Diacritics:** It is **absolutely crucial** to use correct Polish diacritical marks (ą, ę, ć, ł, ń, ó, ś, ź, ż) consistently and accurately. This is a top priority.
+- **Diacritics:** It is **absolutely crucial** to use correct Polish diacritical marks (ą, ę, ć, ł, ń, ó, ś, ź, ż) consistently and accurately, ensuring they are rendered as direct UTF-8 characters per the rule above. This is a top priority.
 - **Mixed Language:** When an English word or phrase is used within a Polish sentence, transcribe it in English and apply the English capitalization rules below.
 
 ### For English (`en-US` / `en-GB`)
@@ -70,9 +71,6 @@ This is a **clean** transcript. Adhere strictly to the following rules:
 ## 5. Handling Technical Terminology
 - In general, use the English term for technical concepts, especially in computing and software development.
 - **Examples:** Transcribe as `canvas`, not `płótno`; `vertex`, not `wierzchołek`; `scene`, not `scena`, when used in a technical context.
-
-## 6. Custom Notes for this specific job:
-${notes}
 """
 
         response = client.models.generate_content(
