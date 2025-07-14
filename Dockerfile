@@ -1,7 +1,7 @@
 # Dockerfile for a custom n8n image with pipx for persistent Python packages
 
 # Use the official n8n image as the base
-FROM n8nio/n8n
+FROM n8nio/n8n:1.103.0
 
 # Switch to the root user to install necessary system packages
 USER root
