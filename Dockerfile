@@ -1,22 +1,17 @@
-# Dockerfile for a custom n8n image with pipx for persistent Python packages
+# Use a base image with ARM support
+FROM node:22-bullseye
+ARG N8N_VERSION=1.103.0
 
-# Use the official n8n image as the base
-FROM n8nio/n8n:1.103.0
+# Install build dependencies
+# Python and build tools (make, g++) might be needed for building some npm packages
+RUN apt-get update && apt-get install -y curl python3 python3-pip jq
 
-# Switch to the root user to install necessary system packages
-USER root
+RUN pip3 install --no-cache-dir \
+        pipx==1.7.1 \
+        google-genai==1.26.0 \
+        markdown-it-py==3.0.0 \
+        duckling
 
-# Update package lists and install python3 and python3-pip
-RUN apk update && apk add --no-cache \
-    python3 \
-    py3-pip \
-    git \
-    curl \
-    jq && \
-    # Clean up the apk cache
-    rm -rf /var/cache/apk/*
-
-# Install npm packages globally
 RUN npm install -g \
     axios \
     lodash \
@@ -27,20 +22,22 @@ RUN npm install -g \
     async && \
     npm cache clean --force
 
-# Switch back to the non-root 'node' user for security
+# Install n8n globally
+RUN npm install n8n@${N8N_VERSION} -g
+
+# Switch to the node user
 USER node
 
-# Create the n8n nodes directory if it doesn't exist
-# This is where custom n8n nodes will be installed
+# Create a directory for n8n data
+RUN mkdir /home/node/.n8n
+
+# Set the ownership of the n8n data directory to the node user
+RUN chown -R node:node /home/node/.n8n
+
 RUN mkdir -p ~/.n8n/nodes
-RUN cd ~/.n8n/nodes && npm i n8n-nodes-document-generator
-RUN cd ~/.n8n/nodes && npm i n8n-nodes-text-manipulation
+RUN cd ~/.n8n/nodes && npm i n8n-nodes-document-generator@1.0.10
+RUN cd ~/.n8n/nodes && npm i n8n-nodes-text-manipulation@1.4.0
 
-# Install pipx using pip
-# We use --no-cache-dir to minimize layer size
-RUN pip install --no-cache-dir --user --break-system-packages pipx google-genai markdown-it-py docling
-
-# Set environment variables for pipx
 # PIPX_HOME is where pipx stores its virtual environments and other data.
 ENV PIPX_HOME=/home/node/.pipx
 # PIPX_BIN_DIR is where the executables for apps installed by pipx are placed.
@@ -49,3 +46,9 @@ ENV PIPX_BIN_DIR=/home/node/.local/bin
 # Add the pipx bin directory to the system's PATH
 # This ensures that any command-line tools installed via pipx can be found and executed by n8n.
 ENV PATH="$PATH:${PIPX_BIN_DIR}"
+
+# Expose the n8n port
+EXPOSE 5678
+
+# Start n8n
+CMD ["n8n"]
