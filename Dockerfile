@@ -7,19 +7,38 @@ FROM n8nio/n8n:1.103.0
 USER root
 
 # Update package lists and install python3 and python3-pip
-RUN apk update && apk add --no-cache python3 py3-pip && \
+RUN apk update && apk add --no-cache \
+    python3 \
+    py3-pip \
+    git \
+    curl \
+    jq && \
     # Clean up the apk cache
     rm -rf /var/cache/apk/*
 
-# Install custom community nodes
-RUN cd /usr/local/lib/node_modules/n8n && npm install n8n-nodes-document-generator n8n-nodes-text-manipulation
+# Install npm packages globally
+RUN npm install -g \
+    axios \
+    lodash \
+    lodash \
+    ytdl-core \
+    jsonata \
+    @types/node \
+    async && \
+    npm cache clean --force
 
 # Switch back to the non-root 'node' user for security
 USER node
 
+# Create the n8n nodes directory if it doesn't exist
+# This is where custom n8n nodes will be installed
+RUN mkdir -p ~/.n8n/nodes
+RUN cd ~/.n8n/nodes && npm i n8n-nodes-document-generator
+RUN cd ~/.n8n/nodes && npm i n8n-nodes-text-manipulation
+
 # Install pipx using pip
 # We use --no-cache-dir to minimize layer size
-RUN pip install --no-cache-dir --user --break-system-packages pipx google-genai markdown-it-py
+RUN pip install --no-cache-dir --user --break-system-packages pipx google-genai markdown-it-py docling
 
 # Set environment variables for pipx
 # PIPX_HOME is where pipx stores its virtual environments and other data.
