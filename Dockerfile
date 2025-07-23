@@ -11,12 +11,15 @@ RUN apk update && apk add --no-cache python3 py3-pip && \
     # Clean up the apk cache
     rm -rf /var/cache/apk/*
 
+# Install custom community nodes
+RUN cd /usr/local/lib/node_modules/n8n && npm install n8n-nodes-document-generator n8n-nodes-text-manipulation
+
 # Switch back to the non-root 'node' user for security
 USER node
 
 # Install pipx using pip
 # We use --no-cache-dir to minimize layer size
-RUN pip install --no-cache-dir --user --break-system-packages pipx google-genai
+RUN pip install --no-cache-dir --user --break-system-packages pipx google-genai markdown-it-py
 
 # Set environment variables for pipx
 # PIPX_HOME is where pipx stores its virtual environments and other data.
