@@ -6,12 +6,21 @@ ARG N8N_VERSION=1.103.0
 # Python and build tools (make, g++) might be needed for building some npm packages
 RUN apt-get update && apt-get install -y curl python3 python3-pip jq
 
+# Install additional dependencies
 RUN pip3 install --no-cache-dir \
         pipx==1.7.1 \
         google-genai==1.26.0 \
         markdown-it-py==3.0.0 \
         duckling
 
+# Install n8n globally
+RUN npm install n8n@${N8N_VERSION} -g
+
+# Install problematic npm packages with --force
+RUN npm install -g --force \
+    markdown-it@14.1.0
+
+# Install additional npm packages globally
 RUN npm install -g \
     axios \
     lodash \
@@ -22,8 +31,7 @@ RUN npm install -g \
     async && \
     npm cache clean --force
 
-# Install n8n globally
-RUN npm install n8n@${N8N_VERSION} -g
+
 
 # Switch to the node user
 USER node
